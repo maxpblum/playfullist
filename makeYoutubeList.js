@@ -1,12 +1,14 @@
-var tag = document.createElement('script');
-
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-function onYouTubeIframeAPIReady() {
-  window.lp = new ListPlayer();
-}
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.text && msg.text === 'toggle_list_player') {
+    if (window.lp) {
+      window.lp.close();
+      delete window.lp;
+    } else {
+      window.lp = new window.ListPlayer();
+      window.lp.open();
+    }
+  }
+});
 
 function ListPlayer(parent) {
   var listPlayer = this;
