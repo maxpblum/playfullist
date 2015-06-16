@@ -96,6 +96,10 @@ function ListPlayer(parent) {
     this.play(this.index);
   };
 
+  this.close = function() {
+    listPlayer.playerPanel.parentElement.removeChild(listPlayer.playerPanel);
+  }
+
   this.index = 0;
 
   this.play = function(index) {
