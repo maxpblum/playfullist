@@ -38,7 +38,7 @@ function ListPlayer(parent) {
         top: '0px',
         right: '0px',
         zIndex: 100,
-        backgroundColor: 'rgba(0, 0, 0, 0.47)'
+        backgroundColor: 'black'
       });
 
       this.getControls(panel);
