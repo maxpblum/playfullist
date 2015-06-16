@@ -12,7 +12,17 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 
 function ListPlayer(parent) {
   this.findVideos = function() {
-    return document.getElementsByClassName('youtube-player');
+    if (!listPlayer.iframeClass) {
+      var iframes = document.getElementsByTagName('iframe');
+      for (var i = 0; i < iframes.length; i++) {
+        if (iframes[i].src && iframes[i].src.indexOf('youtube') !== -1) {
+          listPlayer.iframeClass = iframes[i].class;
+          break;
+        }
+      }
+      listPlayer.iframeClass = listPlayer.iframeClass || 'youtube-player';
+    }
+    return document.getElementsByClassName(listPlayer.iframeClass);
   };
 
   this.getNext = function() {
