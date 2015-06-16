@@ -11,12 +11,47 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 });
 
 function ListPlayer(parent) {
+  this.findVideos = function() {
+    return document.getElementsByClassName('youtube-player');
+  };
+
+  this.getNext = function() {
+    return listPlayer.getVideo(function(videoList, i) {
+        if (videoList.length > i + 1) {
+          return videoList[i + 1];
+        } else {
+          return;
+        }
+    });
+  };
+
+  this.getPrev = function() {
+    return listPlayer.getVideo(function(videoList, i) {
+        if (videoList.length > 1) {
+          return videoList[i - 1];
+        } else {
+          return;
+        }
+    });
+  }
+
+  this.getVideo = function(getter) {
+    var videos = listPlayer.findVideos();
+    for (var i = 0; i < videos.length; i++) {
+      if (videos[i].src.indexOf(listPlayer.currentVideoCode) !== -1) {
+        return getter(videos, i);
+      }
+    }
+    return videos[0];
+  };
+
+  this.currentVideoCode = "IHOPEINEVERFINDTHISCODEINAURL"
+
   var listPlayer = this;
 
   this.parent = parent;
 
   this.onPlayerReady = function(event) {
-    listPlayer.playerPanel.scrollIntoView();
     event.target.playVideo();
   };
 
@@ -33,7 +68,7 @@ function ListPlayer(parent) {
     } else {
 
       var panel = this.getStyledElement('div', parent, {
-        position: 'absolute',
+        position: 'fixed',
         width: '640px',
         height: '397px', // Video + controls
         display: 'block',
@@ -64,11 +99,11 @@ function ListPlayer(parent) {
 
     var leftButton = this.getButton("&#x23EA;", controls);
     leftButton.style.left = '20%';
-    leftButton.onclick = listPlayer.playPrev.bind(listPlayer);
+    leftButton.onclick = listPlayer.play.bind(listPlayer, 'prev');
 
     var rightButton = this.getButton("&#x23E9;", controls);
     rightButton.style.right = '20%';
-    rightButton.onclick = listPlayer.playNext.bind(listPlayer);
+    rightButton.onclick = listPlayer.play.bind(listPlayer, 'next');
   };
 
   this.getButton = function(content, parent) {
@@ -95,7 +130,7 @@ function ListPlayer(parent) {
 
   this.open = function() {
     this.playerPanel = this.makePlayerPanel(this.parent);
-    this.play(this.index);
+    this.play();
   };
 
   this.close = function() {
@@ -104,34 +139,25 @@ function ListPlayer(parent) {
 
   this.index = 0;
 
-  this.play = function(index) {
-    var videoElements = document.getElementsByClassName('youtube-player');
-    if (index >= 0 && index < videoElements.length) {
-      var video = videoElements[index];
-      video.scrollIntoView();
+  this.play = function(direction) {
+    document.getElementsByTagName('h1')[0].innerHTML = 'here!';
+    var video = direction === 'prev' ? listPlayer.getPrev() : listPlayer.getNext();
+    listPlayer.currentVideoCode = video.src.split('embed/')[1].split('?')[0];
+    video.scrollIntoView();
+    this.prepareContainer();
 
-      this.prepareContainer();
-      var player = new YT.Player('list-player', {
-        videoId: video.src.split('embed/')[1].split('?')[0],
-        autoplay: 1,
-        events: {
-          'onReady': listPlayer.onPlayerReady,
-          'onStateChange': function(event) {
-            if (event.data === 0) {
-              listPlayer.playNext();
-            }
+    var player = new YT.Player('list-player', {
+      videoId: listPlayer.currentVideoCode,
+      autoplay: 1,
+      events: {
+        'onReady': listPlayer.onPlayerReady,
+        'onStateChange': function(event) {
+          if (event.data === 0) {
+            listPlayer.play('next');
           }
         }
-      });
-    }
-  };
-
-  this.playNext = function() {
-    listPlayer.play(++listPlayer.index);
-  };
-
-  this.playPrev = function() {
-    listPlayer.play(--listPlayer.index);
+      }
+    });
   };
 
   this.prepareContainer = function() {
