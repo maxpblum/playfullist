@@ -150,7 +150,6 @@ function ListPlayer(parent) {
   this.index = 0;
 
   this.play = function(direction) {
-    document.getElementsByTagName('h1')[0].innerHTML = 'here!';
     var video = direction === 'prev' ? listPlayer.getPrev() : listPlayer.getNext();
     listPlayer.currentVideoCode = video.src.split('embed/')[1].split('?')[0];
     video.scrollIntoView();
