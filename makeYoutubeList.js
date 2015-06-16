@@ -18,7 +18,7 @@ function ListPlayer(parent) {
     event.target.playVideo();
   };
 
-  this.getPlayerPanel = function(parent) {
+  this.makePlayerPanel = function(parent) {
     parent = parent || document.body;
     var existing = document.getElementById('list-player-panel');
 
@@ -92,7 +92,7 @@ function ListPlayer(parent) {
   };
 
   this.open = function() {
-    this.playerPanel = this.getPlayerPanel(this.parent);
+    this.playerPanel = this.makePlayerPanel(this.parent);
     this.play(this.index);
   };
 
