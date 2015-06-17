@@ -11,6 +11,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
 });
 
 function ListPlayer(parent) {
+  this.currentVideoCode = "IHOPEINEVERFINDTHISCODEINAURL"
+  var listPlayer = this;
+  this.parent = parent;
+
   this.findVideos = function() {
     if (!listPlayer.iframeClass) {
       var iframes = document.getElementsByTagName('iframe');
@@ -55,12 +59,6 @@ function ListPlayer(parent) {
     return videos[0];
   };
 
-  this.currentVideoCode = "IHOPEINEVERFINDTHISCODEINAURL"
-
-  var listPlayer = this;
-
-  this.parent = parent;
-
   this.onPlayerReady = function(event) {
     event.target.playVideo();
   };
@@ -69,30 +67,20 @@ function ListPlayer(parent) {
     parent = parent || document.body;
     var existing = document.getElementById('list-player-panel');
 
-    if (existing) {
+    var panel = this.getStyledElement('div', parent, {
+      position: 'fixed',
+      width: '640px',
+      height: '397px', // Video + controls
+      display: 'block',
+      top: '0px',
+      right: '0px',
+      zIndex: 100,
+      backgroundColor: 'black'
+    });
 
-      if (existing.parentElement === parent)
-        return existing;
-      throw new Error('List player panel already exists, but not in parent element ' + parent);
+    this.getControls(panel);
 
-    } else {
-
-      var panel = this.getStyledElement('div', parent, {
-        position: 'fixed',
-        width: '640px',
-        height: '397px', // Video + controls
-        display: 'block',
-        top: '0px',
-        right: '0px',
-        zIndex: 100,
-        backgroundColor: 'black'
-      });
-
-      this.getControls(panel);
-
-      return panel;
-
-    }
+    return panel;
   };
 
   this.getControls = function(panel) {
@@ -146,8 +134,6 @@ function ListPlayer(parent) {
   this.close = function() {
     listPlayer.playerPanel.parentElement.removeChild(listPlayer.playerPanel);
   }
-
-  this.index = 0;
 
   this.play = function(direction) {
     var video = direction === 'prev' ? listPlayer.getPrev() : listPlayer.getNext();

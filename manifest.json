@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "playfullist",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Toggles a panel for playing all embedded Youtube videos on a Wordpress blog",
     "browser_action": {
         "name": "Play all embedded Youtube videos",
