@@ -5,15 +5,15 @@
     "description": "Toggles a panel for playing all embedded Youtube videos on a Wordpress blog",
     "browser_action": {
         "name": "Play all embedded Youtube videos",
-        "default_icon": "luna.png"
+        "default_icon": "i/luna.png"
     },
     "content_scripts": [{
         "matches": ["https://willcampo.wordpress.com/*", "http://willcampo.wordpress.com/*"],
-        "js": ["makeYoutubeList.js", "iframe_api.js", "www-widgetapi.js"]
+        "js": ["js/makeYoutubeList.js", "js/iframe_api.js", "js/www-widgetapi.js"]
     }],
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["js/background.js"]
     },
     "permissions": ["activeTab"],
-    "icons": {"128": "luna.png"}
+    "icons": {"128": "i/luna.png"}
 }
