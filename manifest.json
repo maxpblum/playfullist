@@ -8,7 +8,7 @@
         "default_icon": "i/luna.png"
     },
     "content_scripts": [{
-        "matches": ["https://willcampo.wordpress.com/*", "http://willcampo.wordpress.com/*"],
+        "matches": ["https://*/*", "http://*/*"],
         "js": ["js/makeYoutubeList.js", "js/iframe_api.js", "js/www-widgetapi.js"]
     }],
     "background": {
